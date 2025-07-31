@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Gestión de Talento</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-users-cog"></i>
+                    <h2>Panel Admin</h2>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="menu-item active" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="menu-item" data-section="employees">
+                            <i class="fas fa-users"></i>
+                            Empleados
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="menu-item" data-section="tasks">
+                            <i class="fas fa-tasks"></i>
+                            Gestión de Tareas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="menu-item" data-section="onboarding">
+                            <i class="fas fa-user-plus"></i>
+                            Onboarding
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="menu-item" data-section="recognitions">
+                            <i class="fas fa-award"></i>
+                            Reconocimientos
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name" id="adminName">Administrador</div>
+                        <div class="user-role">Admin</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <div>
+                        <h1>Dashboard Administrativo</h1>
+                        <p>Vista general del sistema y métricas clave</p>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="refreshDashboard()">
+                            <i class="fas fa-sync-alt"></i>
+                            Actualizar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalEmployees">0</h3>
+                            <p>Total Empleados</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="activeTasks">0</h3>
+                            <p>Tareas Activas</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="completedTasks">0</h3>
+                            <p>Tareas Completadas</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="onboardingUsers">0</h3>
+                            <p>En Onboarding</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Actividad Reciente</h3>
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="timeline" id="recentActivity">
+                                <div class="loading">Cargando actividad...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Progreso por Departamento</h3>
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="chart-container" id="departmentProgress">
+                                <div class="loading">Cargando datos...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Employees Section -->
+            <section id="employees" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h1>Gestión de Empleados</h1>
+                        <p>Administrar usuarios y sus perfiles</p>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="openAddEmployeeModal()">
+                            <i class="fas fa-plus"></i>
+                            Agregar Empleado
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Empleado</th>
+                                <th>Departamento</th>
+                                <th>Posición</th>
+                                <th>Estado</th>
+                                <th>Fecha Ingreso</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeesTable">
+                            <tr>
+                                <td colspan="6" class="loading">Cargando empleados...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tasks Section -->
+            <section id="tasks" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h1>Gestión de Tareas</h1>
+                        <p>Crear, asignar y monitorear tareas</p>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="openAddTaskModal()">
+                            <i class="fas fa-plus"></i>
+                            Nueva Tarea
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">Todas</button>
+                    <button class="filter-btn" data-filter="not_started">No Iniciadas</button>
+                    <button class="filter-btn" data-filter="in_progress">En Progreso</button>
+                    <button class="filter-btn" data-filter="completed">Completadas</button>
+                </div>
+
+                <div class="tasks-container" id="tasksContainer">
+                    <div class="loading">Cargando tareas...</div>
+                </div>
+            </section>
+
+            <!-- Onboarding Section -->
+            <section id="onboarding" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h1>Proceso de Onboarding</h1>
+                        <p>Gestionar la integración de nuevos empleados</p>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="openAddOnboardingStepModal()">
+                            <i class="fas fa-plus"></i>
+                            Agregar Paso
+                        </button>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Pasos de Onboarding</h3>
+                            <i class="fas fa-list-ol"></i>
+                        </div>
+                        <div class="card-content">
+                            <div id="onboardingStepsList">
+                                <div class="loading">Cargando pasos...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Progreso por Usuario</h3>
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="card-content">
+                            <div id="onboardingProgressList">
+                                <div class="loading">Cargando progreso...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recognitions Section -->
+            <section id="recognitions" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h1>Sistema de Reconocimientos</h1>
+                        <p>Gestionar reconocimientos y logros de empleados</p>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="openAddRecognitionModal()">
+                            <i class="fas fa-plus"></i>
+                            Nuevo Reconocimiento
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recognitions-container" id="recognitionsContainer">
+                    <div class="loading">Cargando reconocimientos...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="addEmployeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agregar Nuevo Empleado</h2>
+                <span class="close" onclick="closeModal('addEmployeeModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addEmployeeForm">
+                    <div class="detail-row">
+                        <div class="form-group">
+                            <label for="empUsername">Usuario</label>
+                            <input type="text" id="empUsername" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="empEmail">Email</label>
+                            <input type="email" id="empEmail" name="email" required>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="form-group">
+                            <label for="empFullName">Nombre Completo</label>
+                            <input type="text" id="empFullName" name="full_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="empPassword">Contraseña</label>
+                            <input type="password" id="empPassword" name="password" required>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="form-group">
+                            <label for="empDepartment">Departamento</label>
+                            <select id="empDepartment" name="department" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="IT">IT</option>
+                                <option value="HR">Recursos Humanos</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Sales">Ventas</option>
+                                <option value="Finance">Finanzas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="empPosition">Posición</label>
+                            <input type="text" id="empPosition" name="position" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="empRole">Rol</label>
+                        <select id="empRole" name="role" required>
+                            <option value="user">Usuario</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('addEmployeeModal')">Cancelar</button>
+                <button type="submit" form="addEmployeeForm" class="btn btn-primary">Agregar Empleado</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nueva Tarea</h2>
+                <span class="close" onclick="closeModal('addTaskModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addTaskForm">
+                    <div class="form-group">
+                        <label for="taskTitle">Título</label>
+                        <input type="text" id="taskTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">Descripción</label>
+                        <textarea id="taskDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="detail-row">
+                        <div class="form-group">
+                            <label for="taskCategory">Categoría</label>
+                            <select id="taskCategory" name="category_id" required>
+                                <option value="">Seleccionar...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskAssignee">Asignar a</label>
+                            <select id="taskAssignee" name="assigned_to" required>
+                                <option value="">Seleccionar...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="form-group">
+                            <label for="taskPriority">Prioridad</label>
+                            <select id="taskPriority" name="priority" required>
+                                <option value="low">Baja</option>
+                                <option value="medium" selected>Media</option>
+                                <option value="high">Alta</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskDueDate">Fecha Límite</label>
+                            <input type="date" id="taskDueDate" name="due_date">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('addTaskModal')">Cancelar</button>
+                <button type="submit" form="addTaskForm" class="btn btn-primary">Crear Tarea</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Employee Modal -->
+    <div id="editEmployeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Empleado</h2>
+                <span class="close" onclick="closeModal('editEmployeeModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editEmployeeForm">
+                    <input type="hidden" id="editEmpId" name="id">
+                    <div class="detail-row">
+                        <div class="form-group">
+                            <label for="editEmpUsername">Usuario</label>
+                            <input type="text" id="editEmpUsername" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpEmail">Email</label>
+                            <input type="email" id="editEmpEmail" name="email" required>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="form-group">
+                            <label for="editEmpFullName">Nombre Completo</label>
+                            <input type="text" id="editEmpFullName" name="full_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpPassword">Nueva Contraseña (opcional)</label>
+                            <input type="password" id="editEmpPassword" name="password">
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="form-group">
+                            <label for="editEmpDepartment">Departamento</label>
+                            <select id="editEmpDepartment" name="department" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="IT">IT</option>
+                                <option value="HR">Recursos Humanos</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Sales">Ventas</option>
+                                <option value="Finance">Finanzas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpPosition">Posición</label>
+                            <input type="text" id="editEmpPosition" name="position" required>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="form-group">
+                            <label for="editEmpRole">Rol</label>
+                            <select id="editEmpRole" name="role" required>
+                                <option value="user">Usuario</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmpStatus">Estado</label>
+                            <select id="editEmpStatus" name="status" required>
+                                <option value="active">Activo</option>
+                                <option value="inactive">Inactivo</option>
+                                <option value="onboarding">En Onboarding</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('editEmployeeModal')">Cancelar</button>
+                <button type="submit" form="editEmployeeForm" class="btn btn-primary">Actualizar Empleado</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Recognition Modal -->
+    <div id="addRecognitionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nuevo Reconocimiento</h2>
+                <span class="close" onclick="closeModal('addRecognitionModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addRecognitionForm">
+                    <div class="form-group">
+                        <label for="recognitionUser">Empleado</label>
+                        <select id="recognitionUser" name="user_id" required>
+                            <option value="">Seleccionar empleado...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="recognitionTitle">Título</label>
+                        <input type="text" id="recognitionTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recognitionDescription">Descripción</label>
+                        <textarea id="recognitionDescription" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="detail-row">
+                        <div class="form-group">
+                            <label for="recognitionType">Tipo</label>
+                            <select id="recognitionType" name="type" required>
+                                <option value="achievement">Logro</option>
+                                <option value="milestone">Hito</option>
+                                <option value="excellence">Excelencia</option>
+                                <option value="teamwork">Trabajo en Equipo</option>
+                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="recognitionPoints">Puntos</label>
+                        <input type="number" id="recognitionPoints" name="points" min="0" value="100" required>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('addRecognitionModal')">Cancelar</button>
+            <button type="submit" form="addRecognitionForm" class="btn btn-primary">Crear Reconocimiento</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Onboarding Step Modal -->
+<div id="addOnboardingStepModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Agregar Paso de Onboarding</h2>
+            <span class="close" onclick="closeModal('addOnboardingStepModal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="addOnboardingStepForm">
+                <div class="form-group">
+                    <label for="stepTitle">Título</label>
+                    <input type="text" id="stepTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="stepDescription">Descripción</label>
+                    <textarea id="stepDescription" name="description" rows="3" required></textarea>
+                </div>
+                <div class="detail-row">
+                    <div class="form-group">
+                        <label for="stepOrder">Orden</label>
+                        <input type="number" id="stepOrder" name="order_index" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stepHours">Horas Estimadas</label>
+                        <input type="number" id="stepHours" name="estimated_hours" min="0.5" step="0.5" value="1" required>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('addOnboardingStepModal')">Cancelar</button>
+            <button type="submit" form="addOnboardingStepForm" class="btn btn-primary">Agregar Paso</button>
+        </div>
+    </div>
+</div>
+
+    <script src="script.js"></script>
+    <script>
+        // Inicializar dashboard de admin
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = getCurrentUser();
+            if (!currentUser || currentUser.role !== 'admin') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Mostrar nombre del admin
+            document.getElementById('adminName').textContent = currentUser.full_name;
+
+            // Inicializar navegación
+            initializeNavigation();
+            
+            // Cargar dashboard inicial
+            loadDashboard();
+            
+            // Configurar actualización automática cada 30 segundos
+            setInterval(refreshDashboard, 30000);
+
+            // Mejorar el formulario de agregar empleado
+            const addEmployeeForm = document.getElementById('addEmployeeForm');
+            if (addEmployeeForm) {
+                addEmployeeForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = document.querySelector('#addEmployeeModal button[type="submit"]');
+                    if (submitBtn) {
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agregando...';
+                        
+                        const formData = new FormData(this);
+                        const employeeData = {
+                            username: formData.get('username'),
+                            password: formData.get('password'),
+                            email: formData.get('email'),
+                            full_name: formData.get('full_name'),
+                            role: formData.get('role'),
+                            department: formData.get('department'),
+                            position: formData.get('position'),
+                        };
+
+                        try {
+                            const result = await createEmployee(employeeData);
+
+                            if (result.success) {
+                                closeModal('addEmployeeModal');
+                                this.reset();
+
+                                // Actualizar vista de empleados si estamos en esa sección
+                                const employeesSection = document.getElementById('employees');
+                                if (employeesSection && employeesSection.classList.contains('active')) {
+                                    loadEmployees();
+                                }
+
+                                // Actualizar estadísticas del dashboard
+                                loadDashboard();
+
+                                showNotification('Empleado agregado correctamente', 'success');
+                            } else {
+                                showNotification(result.message, 'error');
+                            }
+                        } catch (error) {
+                            showNotification('Error al agregar empleado', 'error');
+                        } finally {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                        }
+                    }
+                });
+            }
+            
+            // Mejorar el formulario de agregar tarea
+            const addTaskForm = document.getElementById('addTaskForm');
+            if (addTaskForm) {
+                addTaskForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = document.querySelector('#addTaskModal button[type="submit"]');
+                    if (submitBtn) {
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+
+                        const formData = new FormData(this);
+                        const taskData = {
+                            title: formData.get('title'),
+                            description: formData.get('description'),
+                            category_id: formData.get('category_id'),
+                            assigned_to: formData.get('assigned_to'),
+                            priority: formData.get('priority'),
+                            due_date: formData.get('due_date'),
+                        };
+
+                        try {
+                            const result = await createTask(taskData);
+
+                            if (result.success) {
+                                closeModal('addTaskModal');
+                                this.reset();
+
+                                // Actualizar vista de tareas si estamos en esa sección
+                                const tasksSection = document.getElementById('tasks');
+                                if (tasksSection && tasksSection.classList.contains('active')) {
+                                    loadTasks();
+                                }
+
+                                // Actualizar estadísticas del dashboard
+                                loadDashboard();
+
+                                showNotification('Tarea creada correctamente', 'success');
+                            } else {
+                                showNotification(result.message, 'error');
+                            }
+                        } catch (error) {
+                            showNotification('Error al crear tarea', 'error');
+                        } finally {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                        }
+                    }
+                });
+            }
+
+            // Event listener para editar empleado
+            const editEmployeeForm = document.getElementById('editEmployeeForm');
+            if (editEmployeeForm) {
+                editEmployeeForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = document.querySelector('#editEmployeeModal button[type="submit"]');
+                    if (submitBtn) {
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
+                        
+                        const formData = new FormData(this);
+                        const employeeData = {
+                            id: parseInt(formData.get('id')),
+                            username: formData.get('username'),
+                            email: formData.get('email'),
+                            full_name: formData.get('full_name'),
+                            department: formData.get('department'),
+                            position: formData.get('position'),
+                            role: formData.get('role'),
+                            status: formData.get('status')
+                        };
+                        
+                        if (formData.get('password')) {
+                            employeeData.password = formData.get('password');
+                        }
+
+                        try {
+                            const result = await updateEmployee(employeeData);
+
+                            if (result.success) {
+                                closeModal('editEmployeeModal');
+                                loadEmployees();
+                                showNotification('Empleado actualizado correctamente', 'success');
+                            } else {
+                                showNotification(result.message, 'error');
+                            }
+                        } catch (error) {
+                            showNotification('Error al actualizar empleado', 'error');
+                        } finally {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                        }
+                    }
+                });
+            }
+
+            // Event listener para agregar reconocimiento
+            const addRecognitionForm = document.getElementById('addRecognitionForm');
+            if (addRecognitionForm) {
+                addRecognitionForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    const recognitionData = {
+                        user_id: parseInt(formData.get('user_id')),
+                        title: formData.get('title'),
+                        description: formData.get('description'),
+                        type: formData.get('type'),
+                        points: parseInt(formData.get('points'))
+                    };
+
+                    try {
+                        const result = await createRecognition(recognitionData);
+
+                        if (result.success) {
+                            closeModal('addRecognitionModal');
+                            this.reset();
+                            loadRecognitions();
+                            showNotification('Reconocimiento creado correctamente', 'success');
+                        } else {
+                            showNotification(result.message, 'error');
+                        }
+                    } catch (error) {
+                        showNotification('Error al crear reconocimiento', 'error');
+                    }
+                });
+            }
+
+            // Event listener para agregar paso de onboarding
+            const addOnboardingStepForm = document.getElementById('addOnboardingStepForm');
+            if (addOnboardingStepForm) {
+                addOnboardingStepForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    const stepData = {
+                        title: formData.get('title'),
+                        description: formData.get('description'),
+                        order_index: parseInt(formData.get('order_index')),
+                        estimated_hours: parseFloat(formData.get('estimated_hours'))
+                    };
+
+                    try {
+                        const result = await createOnboardingStep(stepData);
+
+                        if (result.success) {
+                            closeModal('addOnboardingStepModal');
+                            this.reset();
+                            loadOnboarding();
+                            showNotification('Paso de onboarding agregado correctamente', 'success');
+                        } else {
+                            showNotification(result.message, 'error');
+                        }
+                    } catch (error) {
+                        showNotification('Error al agregar paso', 'error');
+                    }
+                });
+            }
+        });
+
+        function initializeNavigation() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            const sections = document.querySelectorAll('.content-section');
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los items
+                    menuItems.forEach(mi => mi.classList.remove('active'));
+                    sections.forEach(section => section.classList.remove('active'));
+                    
+                    // Agregar clase active al item clickeado
+                    this.classList.add('active');
+                    
+                    // Mostrar sección correspondiente
+                    const sectionId = this.getAttribute('data-section');
+                    document.getElementById(sectionId).classList.add('active');
+                    
+                    // Cargar datos de la sección
+                    loadSectionData(sectionId);
+                });
+            });
+        }
+
+        async function loadSectionData(sectionId) {
+            switch(sectionId) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'employees':
+                    loadEmployees();
+                    break;
+                case 'tasks':
+                    loadTasks();
+                    break;
+                case 'onboarding':
+                    loadOnboarding();
+                    break;
+                case 'recognitions':
+                    loadRecognitions();
+                    break;
+            }
+        }
+
+        async function loadDashboard() {
+            try {
+                const stats = await getAdminStats();
+                
+                document.getElementById('totalEmployees').textContent = stats.totalEmployees;
+                document.getElementById('activeTasks').textContent = stats.activeTasks;
+                document.getElementById('completedTasks').textContent = stats.completedTasks;
+                document.getElementById('onboardingUsers').textContent = stats.onboardingUsers;
+                
+                loadRecentActivity();
+                loadDepartmentProgress();
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        async function loadRecentActivity() {
+            try {
+                const activity = await getRecentActivity();
+                const container = document.getElementById('recentActivity');
+                
+                if (activity.length === 0) {
+                    container.innerHTML = '<div class="no-data">No hay actividad reciente</div>';
+                    return;
+                }
+                
+                container.innerHTML = activity.map(item => `
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>${item.title}</h4>
+                            <p>${item.description}</p>
+                            <div class="timeline-date">${formatDate(item.created_at)}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('recentActivity').innerHTML = '<div class="error">Error cargando actividad</div>';
+            }
+        }
+
+        async function loadDepartmentProgress() {
+            try {
+                const progress = await getDepartmentProgress();
+                const container = document.getElementById('departmentProgress');
+                
+                container.innerHTML = progress.map(dept => `
+                    <div class="chart-item">
+                        <div class="chart-label">${dept.department}</div>
+                        <div class="chart-bar">
+                            <div class="chart-fill" style="width: ${dept.progress}%"></div>
+                        </div>
+                        <div class="chart-value">${dept.progress}%</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('departmentProgress').innerHTML = '<div class="error">Error cargando datos</div>';
+            }
+        }
+
+        async function loadEmployees() {
+            try {
+                const employees = await getAllEmployees();
+                const tbody = document.getElementById('employeesTable');
+                
+                if (employees.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="no-data">No hay empleados registrados</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = employees.map(emp => `
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div class="user-avatar" style="width: 30px; height: 30px; font-size: 0.8rem;">
+                                    ${emp.full_name.charAt(0)}
+                                </div>
+                                <div>
+                                    <div style="font-weight: 500;">${emp.full_name}</div>
+                                    <div style="font-size: 0.8rem; color: var(--secondary-color);">${emp.email}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${emp.department || 'N/A'}</td>
+                        <td>${emp.position || 'N/A'}</td>
+                        <td><span class="status-badge status-${emp.status}">${emp.status}</span></td>
+                        <td>${formatDate(emp.hire_date)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="viewEmployeeDetails(${emp.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="editEmployee(${emp.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                document.getElementById('employeesTable').innerHTML = '<tr><td colspan="6" class="error">Error cargando empleados</td></tr>';
+            }
+        }
+
+        async function loadTasks() {
+            try {
+                const tasks = await getAllTasks();
+                const container = document.getElementById('tasksContainer');
+                
+                if (tasks.length === 0) {
+                    container.innerHTML = '<div class="no-data">No hay tareas registradas</div>';
+                    return;
+                }
+                
+                container.innerHTML = tasks.map(task => `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <div>
+                                <h3>${task.title}</h3>
+                                <p>${task.description || 'Sin descripción'}</p>
+                            </div>
+                            <span class="status-badge status-${getStatusText(task.status)}">${getStatusText(task.status)}</span>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-meta">
+                                <span><i class="fas fa-user"></i> ${task.assigned_name}</span>
+                                <span><i class="fas fa-flag"></i> ${getPriorityText(task.priority)}</span>
+                                <span><i class="fas fa-calendar"></i> ${formatDate(task.due_date)}</span>
+                            </div>
+                        </div>
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${task.progress}%"></div>
+                            </div>
+                            <div class="progress-text">${task.progress}% completado</div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-sm btn-primary" onclick="viewTaskDetails(${task.id})">
+                                <i class="fas fa-eye"></i> Ver
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="editTask(${task.id})">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Configurar filtros
+                setupTaskFilters(tasks);
+            } catch (error) {
+                document.getElementById('tasksContainer').innerHTML = '<div class="error">Error cargando tareas</div>';
+            }
+        }
+
+        // Agregar funciones auxiliares
+        function getStatusText(status) {
+            const statusMap = {
+                'not_started': 'No Iniciada',
+                'in_progress': 'En Progreso',
+                'completed': 'Completada',
+                'active': 'Activo',
+                'inactive': 'Inactivo',
+                'onboarding': 'En Onboarding'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getPriorityText(priority) {
+            const priorityMap = {
+                'low': 'Baja',
+                'medium': 'Media',
+                'high': 'Alta'
+            };
+            return priorityMap[priority] || priority;
+        }
+
+        // Función para mostrar notificaciones en admin
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `message message-${type}`;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '9999';
+            notification.style.minWidth = '300px';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Mejorar la configuración de actualización automática
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = getCurrentUser();
+            if (!currentUser || currentUser.role !== 'admin') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Mostrar nombre del admin
+            document.getElementById('adminName').textContent = currentUser.full_name;
+
+            // Inicializar navegación
+            initializeNavigation();
+            
+            // Cargar dashboard inicial
+            loadDashboard();
+            
+            // Configurar actualización automática cada 10 segundos para admin
+            setInterval(() => {
+                const activeSection = document.querySelector('.content-section.active');
+                if (activeSection) {
+                    const sectionId = activeSection.id;
+                    loadSectionData(sectionId);
+                }
+            }, 10000);
+        });
+
+        function setupTaskFilters(tasks) {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    filterTasks(tasks, filter);
+                });
+            });
+        }
+
+        function filterTasks(tasks, filter) {
+            const filteredTasks = filter === 'all' ? tasks : tasks.filter(task => task.status === filter);
+            const container = document.getElementById('tasksContainer');
+            
+            if (filteredTasks.length === 0) {
+                container.innerHTML = '<div class="no-data">No hay tareas con este filtro</div>';
+                return;
+            }
+            
+            // Re-render filtered tasks (same code as loadTasks but with filtered data)
+            container.innerHTML = filteredTasks.map(task => `
+                <div class="task-card">
+                    <div class="task-header">
+                        <div>
+                            <h3>${task.title}</h3>
+                            <p>${task.description || 'Sin descripción'}</p>
+                        </div>
+                        <span class="status-badge status-${task.status}">${task.status}</span>
+                    </div>
+                    <div class="task-content">
+                        <div class="task-meta">
+                            <span><i class="fas fa-user"></i> ${task.assigned_name}</span>
+                            <span><i class="fas fa-flag"></i> ${task.priority}</span>
+                            <span><i class="fas fa-calendar"></i> ${formatDate(task.due_date)}</span>
+                        </div>
+                    </div>
+                    <div class="task-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${task.progress}%"></div>
+                        </div>
+                        <div class="progress-text">${task.progress}% completado</div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn btn-sm btn-primary" onclick="viewTaskDetails(${task.id})">
+                            <i class="fas fa-eye"></i> Ver
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="editTask(${task.id})">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function refreshDashboard() {
+            loadDashboard();
+        }
+
+        async function refreshProgress() {
+            loadProgress();
+        }
+
+        // Modal functions
+        function openAddEmployeeModal() {
+            // Limpiar formulario antes de abrir
+            const form = document.getElementById('addEmployeeForm');
+            if (form) {
+                form.reset();
+            }
+            document.getElementById('addEmployeeModal').style.display = 'block';
+        }
+
+        function openAddTaskModal() {
+            loadTaskCategories();
+            loadEmployeesList();
+            document.getElementById('addTaskModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Cerrar modales al hacer click fuera
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Funciones para reconocimientos
+        async function loadRecognitions() {
+            try {
+                const recognitions = await getAllRecognitions();
+                const container = document.getElementById('recognitionsContainer');
+                
+                if (recognitions.length === 0) {
+                    container.innerHTML = '<div class="no-data">No hay reconocimientos registrados</div>';
+                    return;
+                }
+                
+                container.innerHTML = recognitions.map(recognition => `
+                    <div class="recognition-card">
+                        <div class="recognition-header">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="recognition-icon">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <div class="recognition-title">
+                                    <h3>${recognition.title}</h3>
+                                    <span class="recognition-type">${recognition.type}</span>
+                                </div>
+                            </div>
+                            <div class="recognition-points">
+                                <span class="points">${recognition.points}</span>
+                                <span class="points-label">puntos</span>
+                            </div>
+                        </div>
+                        <div class="recognition-content">
+                            <p>${recognition.description}</p>
+                        </div>
+                        <div class="recognition-footer">
+                            <span>Para: ${recognition.user_name}</span>
+                            <span>${formatDate(recognition.created_at)}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('recognitionsContainer').innerHTML = '<div class="error">Error cargando reconocimientos</div>';
+            }
+        }
+
+        // Funciones para onboarding
+        async function loadOnboarding() {
+            try {
+                const steps = await getOnboardingSteps();
+                const stepsContainer = document.getElementById('onboardingStepsList');
+                
+                stepsContainer.innerHTML = steps.map(step => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--medium-gray);">
+                        <div>
+                            <div style="font-weight: 500;">${step.order_index}. ${step.title}</div>
+                            <div style="font-size: 0.8rem; color: var(--secondary-color);">${step.description}</div>
+                            <div style="font-size: 0.8rem; color: var(--secondary-color);">
+                                <i class="fas fa-clock"></i> ${step.estimated_hours}h estimadas
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-danger" onclick="deleteOnboardingStep(${step.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
+
+                // Cargar progreso de usuarios
+                loadOnboardingProgress();
+            } catch (error) {
+                document.getElementById('onboardingStepsList').innerHTML = '<div class="error">Error cargando pasos</div>';
+            }
+        }
+
+        async function loadOnboardingProgress() {
+            try {
+                const progress = await getOnboardingProgress();
+                const container = document.getElementById('onboardingProgressList');
+                
+                container.innerHTML = progress.map(user => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--medium-gray);">
+                        <div>
+                            <div style="font-weight: 500;">${user.full_name}</div>
+                            <div style="font-size: 0.8rem; color: var(--secondary-color);">${user.department}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 500; color: var(--primary-color);">${user.completed_steps}/${user.total_steps}</div>
+                            <div style="font-size: 0.8rem; color: var(--secondary-color);">${user.progress_percentage}% completado</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('onboardingProgressList').innerHTML = '<div class="error">Error cargando progreso</div>';
+            }
+        }
+
+        // Funciones para editar empleados
+        function editEmployee(employeeId) {
+            const employee = mockDatabase.users.find(u => u.id === employeeId);
+            if (employee) {
+                document.getElementById('editEmpId').value = employee.id;
+                document.getElementById('editEmpUsername').value = employee.username;
+                document.getElementById('editEmpEmail').value = employee.email;
+                document.getElementById('editEmpFullName').value = employee.full_name;
+                document.getElementById('editEmpDepartment').value = employee.department || '';
+                document.getElementById('editEmpPosition').value = employee.position || '';
+                document.getElementById('editEmpRole').value = employee.role;
+                document.getElementById('editEmpStatus').value = employee.status;
+                
+                document.getElementById('editEmployeeModal').style.display = 'block';
+            }
+        }
+
+        function openAddRecognitionModal() {
+            loadEmployeesForRecognition();
+            document.getElementById('addRecognitionModal').style.display = 'block';
+        }
+
+        function openAddOnboardingStepModal() {
+            document.getElementById('addOnboardingStepModal').style.display = 'block';
+        }
+
+        function loadEmployeesForRecognition() {
+            const select = document.getElementById('recognitionUser');
+            if (select) {
+                select.innerHTML = '<option value="">Seleccionar empleado...</option>';
+                const employees = mockDatabase.users.filter(u => u.role === 'user');
+                employees.forEach(employee => {
+                    const option = document.createElement('option');
+                    option.value = employee.id;
+                    option.textContent = employee.full_name;
+                    select.appendChild(option);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

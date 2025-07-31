@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Usuario - Gestión de Talento</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-user-circle"></i>
+                    <h2>Mi Panel</h2>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="menu-item active" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="menu-item" data-section="tasks">
+                            <i class="fas fa-tasks"></i>
+                            Mis Tareas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="menu-item" data-section="progress">
+                            <i class="fas fa-chart-line"></i>
+                            Mi Progreso
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="menu-item" data-section="onboarding">
+                            <i class="fas fa-user-plus"></i>
+                            Onboarding
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="menu-item" data-section="recognitions">
+                            <i class="fas fa-award"></i>
+                            Reconocimientos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="menu-item" data-section="profile">
+                            <i class="fas fa-user"></i>
+                            Mi Perfil
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">Usuario</div>
+                        <div class="user-role" id="userRole">Empleado</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <div>
+                        <h1>Mi Dashboard</h1>
+                        <p>Resumen de tu actividad y progreso</p>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="refreshUserDashboard()">
+                            <i class="fas fa-sync-alt"></i>
+                            Actualizar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress Overview -->
+                <div class="progress-overview">
+                    <div class="progress-card">
+                        <h3>Progreso General</h3>
+                        <div class="progress-circle" id="overallProgressCircle">
+                            <div class="circle-progress" id="overallProgressText">0%</div>
+                        </div>
+                        <p class="mt-2">Tareas completadas este mes</p>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="userActiveTasks">0</h3>
+                            <p>Tareas Activas</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="userCompletedTasks">0</h3>
+                            <p>Tareas Completadas</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="userRecognitions">0</h3>
+                            <p>Reconocimientos</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="userPoints">0</h3>
+                            <p>Puntos Totales</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Tareas Pendientes</h3>
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="card-content">
+                            <div id="pendingTasksList">
+                                <div class="loading">Cargando tareas...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Actividad Reciente</h3>
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="timeline" id="userRecentActivity">
+                                <div class="loading">Cargando actividad...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tasks Section -->
+            <section id="tasks" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h1>Mis Tareas</h1>
+                        <p>Gestiona y actualiza el progreso de tus tareas</p>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="refreshUserTasks()">
+                            <i class="fas fa-sync-alt"></i>
+                            Actualizar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">Todas</button>
+                    <button class="filter-btn" data-filter="not_started">No Iniciadas</button>
+                    <button class="filter-btn" data-filter="in_progress">En Progreso</button>
+                    <button class="filter-btn" data-filter="completed">Completadas</button>
+                </div>
+
+                <div class="tasks-container" id="userTasksContainer">
+                    <div class="loading">Cargando tus tareas...</div>
+                </div>
+            </section>
+
+            <!-- Progress Section -->
+            <section id="progress" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h1>Mi Progreso</h1>
+                        <p>Visualiza tu progreso y logros</p>
+                    </div>
+                </div>
+
+                <div class="progress-grid">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Progreso por Categoría</h3>
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="card-content">
+                            <div id="categoryProgressContainer">
+                                <div class="loading">Cargando progreso...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Historial de Logros</h3>
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="timeline" id="achievementsTimeline">
+                                <div class="loading">Cargando logros...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Onboarding Section -->
+            <section id="onboarding" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h1>Mi Proceso de Onboarding</h1>
+                        <p>Completa tu proceso de integración</p>
+                    </div>
+                </div>
+
+                <div class="onboarding-container" id="userOnboardingContainer">
+                    <div class="loading">Cargando proceso de onboarding...</div>
+                </div>
+            </section>
+
+            <!-- Recognitions Section -->
+            <section id="recognitions" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h1>Mis Reconocimientos</h1>
+                        <p>Tus logros y reconocimientos obtenidos</p>
+                    </div>
+                </div>
+
+                <div class="recognitions-container" id="userRecognitionsContainer">
+                    <div class="loading">Cargando reconocimientos...</div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h1>Mi Perfil</h1>
+                        <p>Información personal y profesional</p>
+                    </div>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="editProfile()">
+                            <i class="fas fa-edit"></i>
+                            Editar Perfil
+                        </button>
+                    </div>
+                </div>
+
+                <div class="profile-grid">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="profile-info">
+                                <h2 id="profileName">Nombre Usuario</h2>
+                                <p id="profileEmail">email@company.com</p>
+                                <p id="profilePosition">Posición</p>
+                                <span class="profile-department" id="profileDepartment">Departamento</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-details">
+                            <div class="detail-item">
+                                <label>Fecha de Ingreso:</label>
+                                <span id="profileHireDate">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Estado:</label>
+                                <span id="profileStatus">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Usuario:</label>
+                                <span id="profileUsername">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-number" id="profileTasksCompleted">0</div>
+                            <div class="stat-label">Tareas Completadas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="profileRecognitionsCount">0</div>
+                            <div class="stat-label">Reconocimientos</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="profileTotalPoints">0</div>
+                            <div class="stat-label">Puntos Totales</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Task Progress Modal -->
+    <div id="taskProgressModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Actualizar Progreso de Tarea</h2>
+                <span class="close" onclick="closeModal('taskProgressModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="task-detail-info">
+                    <h3 id="modalTaskTitle">Título de la Tarea</h3>
+                    <p id="modalTaskDescription">Descripción de la tarea</p>
+                </div>
+                
+                <form id="updateProgressForm">
+                    <input type="hidden" id="modalTaskId" name="task_id">
+                    
+                    <div class="form-group">
+                        <label for="taskStatus">Estado de la Tarea</label>
+                        <select id="taskStatus" name="status" onchange="updateProgressBasedOnStatus()">
+                            <option value="not_started">No Iniciada</option>
+                            <option value="in_progress">En Progreso</option>
+                            <option value="completed">Completada</option>
+                        </select>
+                    </div>
+
+                    <div class="task-progress-section">
+                        <label for="progressRange">Progreso (%)</label>
+                        <div class="progress-input">
+                            <input type="range" id="progressRange" name="progress" min="0" max="100" value="0" oninput="updateProgressDisplay()">
+                            <span id="progressValue">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="progressNotes">Notas (opcional)</label>
+                        <textarea id="progressNotes" name="notes" rows="3" placeholder="Agrega comentarios sobre tu progreso..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('taskProgressModal')">Cancelar</button>
+                <button type="submit" form="updateProgressForm" class="btn btn-primary">Actualizar Progreso</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Inicializar dashboard de usuario
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticación
+            const currentUser = getCurrentUser();
+            if (!currentUser || currentUser.role !== 'user') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Mostrar información del usuario
+            document.getElementById('userName').textContent = currentUser.full_name;
+            document.getElementById('userRole').textContent = currentUser.department || 'Empleado';
+
+            // Inicializar navegación
+            initializeUserNavigation();
+            
+            // Cargar dashboard inicial
+            loadUserDashboard();
+            
+            // Configurar actualización automática cada 15 segundos para usuarios
+            setInterval(() => {
+                const activeSection = document.querySelector('.content-section.active');
+                if (activeSection) {
+                    const sectionId = activeSection.id;
+                    loadUserSectionData(sectionId);
+                }
+            }, 15000);
+
+            // Agregar event listener para el formulario de progreso
+            const updateProgressForm = document.getElementById('updateProgressForm');
+            if (updateProgressForm) {
+                updateProgressForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    const taskId = formData.get('task_id');
+                    const status = formData.get('status');
+                    const progress = formData.get('progress');
+                    const notes = formData.get('notes');
+                    
+                    // Buscar el botón de submit de manera más segura
+                    const submitBtn = document.querySelector('#taskProgressModal button[type="submit"]');
+                    if (submitBtn) {
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
+                        
+                        try {
+                            const result = await updateTaskProgress(taskId, status, progress, notes);
+                            
+                            if (result.success) {
+                                closeModal('taskProgressModal');
+                                
+                                // Actualizar vistas inmediatamente
+                                loadUserTasks();
+                                loadUserDashboard();
+                                
+                                // Mostrar mensaje de éxito
+                                showNotification('Progreso actualizado correctamente', 'success');
+                            } else {
+                                showNotification('Error actualizando el progreso: ' + result.message, 'error');
+                            }
+                        } catch (error) {
+                            showNotification('Error de conexión al actualizar el progreso', 'error');
+                        } finally {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                        }
+                    }
+                });
+            }
+        });
+
+        function initializeUserNavigation() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            const sections = document.querySelectorAll('.content-section');
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los items
+                    menuItems.forEach(mi => mi.classList.remove('active'));
+                    sections.forEach(section => section.classList.remove('active'));
+                    
+                    // Agregar clase active al item clickeado
+                    this.classList.add('active');
+                    
+                    // Mostrar sección correspondiente
+                    const sectionId = this.getAttribute('data-section');
+                    document.getElementById(sectionId).classList.add('active');
+                    
+                    // Cargar datos de la sección
+                    loadUserSectionData(sectionId);
+                });
+            });
+        }
+
+        async function loadUserSectionData(sectionId) {
+            switch(sectionId) {
+                case 'dashboard':
+                    loadUserDashboard();
+                    break;
+                case 'tasks':
+                    loadUserTasks();
+                    break;
+                case 'progress':
+                    loadUserProgress();
+                    break;
+                case 'onboarding':
+                    loadUserOnboarding();
+                    break;
+                case 'recognitions':
+                    loadUserRecognitions();
+                    break;
+                case 'profile':
+                    loadUserProfile();
+                    break;
+            }
+        }
+
+        async function loadUserDashboard() {
+            try {
+                const currentUser = getCurrentUser();
+                const stats = await getUserStats(currentUser.id);
+                
+                // Actualizar estadísticas
+                document.getElementById('userActiveTasks').textContent = stats.activeTasks;
+                document.getElementById('userCompletedTasks').textContent = stats.completedTasks;
+                document.getElementById('userRecognitions').textContent = stats.recognitions;
+                document.getElementById('userPoints').textContent = stats.totalPoints;
+                
+                // Actualizar progreso general
+                const overallProgress = stats.activeTasks > 0 ? Math.round((stats.completedTasks / (stats.activeTasks + stats.completedTasks)) * 100) : 0;
+                updateProgressCircle(overallProgress);
+                
+                // Cargar tareas pendientes y actividad reciente
+                loadPendingTasks();
+                loadUserRecentActivity();
+            } catch (error) {
+                console.error('Error loading user dashboard:', error);
+            }
+        }
+
+        function updateProgressCircle(percentage) {
+            const circle = document.getElementById('overallProgressCircle');
+            const text = document.getElementById('overallProgressText');
+            
+            const degrees = (percentage / 100) * 360;
+            circle.style.background = `conic-gradient(var(--primary-color) ${degrees}deg, var(--medium-gray) ${degrees}deg)`;
+            text.textContent = `${percentage}%`;
+        }
+
+        async function loadPendingTasks() {
+            try {
+                const currentUser = getCurrentUser();
+                const tasks = await getUserTasks(currentUser.id, 'pending');
+                const container = document.getElementById('pendingTasksList');
+                
+                if (tasks.length === 0) {
+                    container.innerHTML = '<div class="no-data">¡Excelente! No tienes tareas pendientes</div>';
+                    return;
+                }
+                
+                container.innerHTML = tasks.slice(0, 5).map(task => `
+                    <div class="task-item" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--medium-gray);">
+                        <div>
+                            <div style="font-weight: 500; color: var(--dark-gray);">${task.title}</div>
+                            <div style="font-size: 0.8rem; color: var(--secondary-color);">
+                                <i class="fas fa-calendar"></i> ${formatDate(task.due_date)}
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="openTaskProgress(${task.id})">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('pendingTasksList').innerHTML = '<div class="error">Error cargando tareas</div>';
+            }
+        }
+
+        async function loadUserRecentActivity() {
+            try {
+                const currentUser = getCurrentUser();
+                const activity = await getUserActivity(currentUser.id);
+                const container = document.getElementById('userRecentActivity');
+                
+                if (activity.length === 0) {
+                    container.innerHTML = '<div class="no-data">No hay actividad reciente</div>';
+                    return;
+                }
+                
+                container.innerHTML = activity.map(item => `
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>${item.title}</h4>
+                            <p>${item.description}</p>
+                            <div class="timeline-date">${formatDate(item.created_at)}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('userRecentActivity').innerHTML = '<div class="error">Error cargando actividad</div>';
+            }
+        }
+
+        async function loadUserTasks() {
+            try {
+                const currentUser = getCurrentUser();
+                const tasks = await getUserTasks(currentUser.id);
+                const container = document.getElementById('userTasksContainer');
+                
+                if (tasks.length === 0) {
+                    container.innerHTML = '<div class="no-data">No tienes tareas asignadas</div>';
+                    return;
+                }
+                
+                container.innerHTML = tasks.map(task => `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <div>
+                                <h3>${task.title}</h3>
+                                <p>${task.description || 'Sin descripción'}</p>
+                            </div>
+                            <span class="status-badge status-${task.status}">${getStatusText(task.status)}</span>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-meta">
+                                <span><i class="fas fa-flag"></i> ${getPriorityText(task.priority)}</span>
+                                <span><i class="fas fa-calendar"></i> ${formatDate(task.due_date)}</span>
+                                <span><i class="fas fa-folder"></i> ${task.category_name}</span>
+                            </div>
+                        </div>
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${task.progress}%"></div>
+                            </div>
+                            <div class="progress-text">${task.progress}% completado</div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-primary" onclick="openTaskProgress(${task.id})">
+                                <i class="fas fa-edit"></i> Actualizar Progreso
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Configurar filtros para tareas de usuario
+                setupUserTaskFilters(tasks);
+            } catch (error) {
+                document.getElementById('userTasksContainer').innerHTML = '<div class="error">Error cargando tareas</div>';
+            }
+        }
+
+        function setupUserTaskFilters(tasks) {
+            const filterBtns = document.querySelectorAll('#tasks .filter-btn');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    filterUserTasks(tasks, filter);
+                });
+            });
+        }
+
+        function filterUserTasks(tasks, filter) {
+            const filteredTasks = filter === 'all' ? tasks : tasks.filter(task => task.status === filter);
+            const container = document.getElementById('userTasksContainer');
+            
+            if (filteredTasks.length === 0) {
+                container.innerHTML = '<div class="no-data">No hay tareas con este filtro</div>';
+                return;
+            }
+            
+            container.innerHTML = filteredTasks.map(task => `
+                <div class="task-card">
+                    <div class="task-header">
+                        <div>
+                            <h3>${task.title}</h3>
+                            <p>${task.description || 'Sin descripción'}</p>
+                        </div>
+                        <span class="status-badge status-${task.status}">${getStatusText(task.status)}</span>
+                    </div>
+                    <div class="task-content">
+                        <div class="task-meta">
+                            <span><i class="fas fa-flag"></i> ${getPriorityText(task.priority)}</span>
+                            <span><i class="fas fa-calendar"></i> ${formatDate(task.due_date)}</span>
+                            <span><i class="fas fa-folder"></i> ${task.category_name}</span>
+                        </div>
+                    </div>
+                    <div class="task-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${task.progress}%"></div>
+                        </div>
+                        <div class="progress-text">${task.progress}% completado</div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn btn-primary" onclick="openTaskProgress(${task.id})">
+                            <i class="fas fa-edit"></i> Actualizar Progreso
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function openTaskProgress(taskId) {
+            try {
+                const task = await getTaskById(taskId);
+                
+                // Llenar modal con datos de la tarea
+                document.getElementById('modalTaskId').value = task.id;
+                document.getElementById('modalTaskTitle').textContent = task.title;
+                document.getElementById('modalTaskDescription').textContent = task.description || 'Sin descripción';
+                document.getElementById('taskStatus').value = task.status;
+                document.getElementById('progressRange').value = task.progress;
+                document.getElementById('progressValue').textContent = task.progress + '%';
+                document.getElementById('progressNotes').value = task.notes || '';
+                
+                // Mostrar modal
+                document.getElementById('taskProgressModal').style.display = 'block';
+            } catch (error) {
+                alert('Error cargando datos de la tarea');
+            }
+        }
+
+        function updateProgressBasedOnStatus() {
+            const status = document.getElementById('taskStatus').value;
+            const progressRange = document.getElementById('progressRange');
+            
+            switch(status) {
+                case 'not_started':
+                    progressRange.value = 0;
+                    break;
+                case 'completed':
+                    progressRange.value = 100;
+                    break;
+                // Para 'in_progress' no cambiar el valor actual
+            }
+            
+            updateProgressDisplay();
+        }
+
+        function updateProgressDisplay() {
+            const progress = document.getElementById('progressRange').value;
+            document.getElementById('progressValue').textContent = progress + '%';
+        }
+
+        // Manejar formulario de actualización de progreso
+        
+
+        async function loadUserProgress() {
+            try {
+                const currentUser = getCurrentUser();
+                const progress = await getUserProgressByCategory(currentUser.id);
+                const container = document.getElementById('categoryProgressContainer');
+                
+                if (progress.length === 0) {
+                    container.innerHTML = '<div class="no-data">No hay datos de progreso disponibles</div>';
+                    return;
+                }
+                
+                container.innerHTML = progress.map(category => `
+                    <div class="category-progress-item">
+                        <div class="category-info">
+                            <h4>${category.category_name}</h4>
+                            <span>${category.completed_tasks}/${category.total_tasks} tareas</span>
+                        </div>
+                        <div class="progress-bar" style="flex: 1; margin: 0 1rem;">
+                            <div class="progress-fill" style="width: ${category.progress_percentage}%"></div>
+                        </div>
+                        <div class="progress-percentage">${category.progress_percentage}%</div>
+                    </div>
+                `).join('');
+                
+                // Cargar historial de logros
+                loadAchievementsTimeline();
+            } catch (error) {
+                document.getElementById('categoryProgressContainer').innerHTML = '<div class="error">Error cargando progreso</div>';
+            }
+        }
+
+        async function loadAchievementsTimeline() {
+            try {
+                const currentUser = getCurrentUser();
+                const achievements = await getUserAchievements(currentUser.id);
+                const container = document.getElementById('achievementsTimeline');
+                
+                if (achievements.length === 0) {
+                    container.innerHTML = '<div class="no-data">Aún no tienes logros registrados</div>';
+                    return;
+                }
+                
+                container.innerHTML = achievements.map(achievement => `
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>${achievement.title}</h4>
+                            <p>${achievement.description}</p>
+                            <div class="timeline-date">${formatDate(achievement.completed_at)}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('achievementsTimeline').innerHTML = '<div class="error">Error cargando logros</div>';
+            }
+        }
+
+        async function loadUserOnboarding() {
+            try {
+                const currentUser = getCurrentUser();
+                const onboarding = await getUserOnboarding(currentUser.id);
+                const container = document.getElementById('userOnboardingContainer');
+                
+                if (onboarding.length === 0) {
+                    container.innerHTML = '<div class="no-data">No hay proceso de onboarding asignado</div>';
+                    return;
+                }
+                
+                container.innerHTML = onboarding.map(step => `
+                    <div class="onboarding-card">
+                        <div class="onboarding-header">
+                            <div>
+                                <h3>${step.title}</h3>
+                                <p>${step.description}</p>
+                            </div>
+                            <span class="status-badge status-${step.status}">${getStatusText(step.status)}</span>
+                        </div>
+                        <div class="onboarding-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${step.progress}%"></div>
+                            </div>
+                            <div class="progress-text">${step.progress}% completado</div>
+                        </div>
+                        <div class="onboarding-actions">
+                            <div style="font-size: 0.8rem; color: var(--secondary-color);">
+                                <i class="fas fa-clock"></i> ${step.estimated_hours}h estimadas
+                            </div>
+                            ${step.status !== 'completed' ? `
+                                <button class="btn btn-sm btn-primary" onclick="updateOnboardingStep(${step.id})">
+                                    <i class="fas fa-check"></i> Marcar Completado
+                                </button>
+                            ` : `
+                                <span style="color: var(--success-color); font-size: 0.8rem;">
+                                    <i class="fas fa-check-circle"></i> Completado
+                                </span>
+                            `}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('userOnboardingContainer').innerHTML = '<div class="error">Error cargando onboarding</div>';
+            }
+        }
+
+        async function updateOnboardingStep(stepId) {
+            try {
+                const currentUser = getCurrentUser();
+                const result = await completeOnboardingStep(currentUser.id, stepId);
+                
+                if (result.success) {
+                    // Actualizar vistas inmediatamente
+                    loadUserOnboarding();
+                    loadUserDashboard();
+                    showNotification('Paso de onboarding completado', 'success');
+                } else {
+                    showNotification('Error completando el paso: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Error de conexión', 'error');
+            }
+        }
+
+        async function loadUserRecognitions() {
+            try {
+                const currentUser = getCurrentUser();
+                const recognitions = await getUserRecognitions(currentUser.id);
+                const container = document.getElementById('userRecognitionsContainer');
+                
+                if (recognitions.length === 0) {
+                    container.innerHTML = '<div class="no-data">Aún no tienes reconocimientos</div>';
+                    return;
+                }
+                
+                container.innerHTML = recognitions.map(recognition => `
+                    <div class="recognition-card">
+                        <div class="recognition-header">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="recognition-icon">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <div class="recognition-title">
+                                    <h3>${recognition.title}</h3>
+                                    <span class="recognition-type">${recognition.type}</span>
+                                </div>
+                            </div>
+                            <div class="recognition-points">
+                                <span class="points">${recognition.points}</span>
+                                <span class="points-label">puntos</span>
+                            </div>
+                        </div>
+                        <div class="recognition-content">
+                            <p>${recognition.description}</p>
+                        </div>
+                        <div class="recognition-footer">
+                            <span>Otorgado por: ${recognition.given_by_name}</span>
+                            <span>${formatDate(recognition.created_at)}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('userRecognitionsContainer').innerHTML = '<div class="error">Error cargando reconocimientos</div>';
+            }
+        }
+
+        async function loadUserProfile() {
+            try {
+                const currentUser = getCurrentUser();
+                const profile = await getUserProfile(currentUser.id);
+                
+                // Actualizar información del perfil
+                document.getElementById('profileName').textContent = profile.full_name;
+                document.getElementById('profileEmail').textContent = profile.email;
+                document.getElementById('profilePosition').textContent = profile.position || 'No especificado';
+                document.getElementById('profileDepartment').textContent = profile.department || 'No especificado';
+                document.getElementById('profileHireDate').textContent = formatDate(profile.hire_date);
+                document.getElementById('profileStatus').textContent = getStatusText(profile.status);
+                document.getElementById('profileUsername').textContent = profile.username;
+                
+                // Actualizar estadísticas del perfil
+                document.getElementById('profileTasksCompleted').textContent = profile.completed_tasks || 0;
+                document.getElementById('profileRecognitionsCount').textContent = profile.recognitions_count || 0;
+                document.getElementById('profileTotalPoints').textContent = profile.total_points || 0;
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+            }
+        }
+
+        // Funciones auxiliares
+        function getStatusText(status) {
+            const statusMap = {
+                'not_started': 'No Iniciada',
+                'in_progress': 'En Progreso',
+                'completed': 'Completada',
+                'active': 'Activo',
+                'inactive': 'Inactivo',
+                'onboarding': 'En Onboarding'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getPriorityText(priority) {
+            const priorityMap = {
+                'low': 'Baja',
+                'medium': 'Media',
+                'high': 'Alta'
+            };
+            return priorityMap[priority] || priority;
+        }
+
+        function refreshUserDashboard() {
+            loadUserDashboard();
+        }
+
+        function refreshUserTasks() {
+            loadUserTasks();
+        }
+
+        function editProfile() {
+            alert('Funcionalidad de edición de perfil en desarrollo');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showNotification(message, type) {
+            // Crear notificación temporal
+            const notification = document.createElement('div');
+            notification.className = `message message-${type}`;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '9999';
+            notification.style.minWidth = '300px';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Cerrar modales al hacer click fuera
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
